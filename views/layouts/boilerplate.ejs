@@ -22,25 +22,7 @@
             integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
                 crossorigin="anonymous"></script>
 
-        <script>
-            (function () {
-                'use strict'
-
-                var forms = document.querySelectorAll('.needs-validation')
-
-                Array.from(forms)
-                    .forEach(function (form) {
-                        form.addEventListener('submit', function (event) {
-                            if (!form.checkValidity()) {
-                                event.preventDefault()
-                                event.stopPropagation()
-                            }
-
-                            form.classList.add('was-validated')
-                        }, false)
-                    })
-            })()
-        </script>
+        <script src="/javascripts/validateForms.js"></script>
 </body>
 
 </html>
