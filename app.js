@@ -1,13 +1,18 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
+const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressErrors');
-const campground = require('./routes/campgroud.js')
-const reviews = require('./routes/review.js')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const User = require('./models/user.js')
+
+const userRoutes = require('./routes/users.js')
+const campgroundRoutes = require('./routes/campgroud.js')
+const reviewRoutes = require('./routes/review.js');
 
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
     .then(() => {
@@ -30,23 +35,31 @@ app.use(express.static(path.join(__dirname, '/public')))
 const sessionConfig = {
     secret: "ThisIsASecretMessage",
     resave: false,
-    saveUninitialized: false, 
+    saveUninitialized: false,
     cookie: {
-        httpOnly: true, 
-        expires: Date.now() + 1000*60*60*24*7, 
-        maxAge: 1000*60*60*24*7
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
 app.use(session(sessionConfig))
 app.use(flash())
+
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 app.use((req, res, next) => {
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error');
     next();
 })
-app.use('/campgrounds', campground)
-app.use('/campgrounds/:id/reviews', reviews)
+
+app.use('/', userRoutes)
+app.use('/campgrounds', campgroundRoutes)
+app.use('/campgrounds/:id/reviews', reviewRoutes)
 
 app.get('/', (req, res, next) => {
     res.render('home');
