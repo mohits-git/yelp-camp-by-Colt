@@ -8,7 +8,10 @@ const campgroundSchema = new Schema({
     price: Number,
     description: String,
     location: String,
-
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId, 
@@ -22,6 +25,11 @@ campgroundSchema.post('findOneAndDelete', async function(doc) {
         await Review.deleteMany({
             _id: { $in : doc.reviews}
         })
+    }
+})
+campgroundSchema.post('deleteMany', async function(doc) {
+    if(doc) {
+        await Review.deleteMany({})
     }
 })
 
