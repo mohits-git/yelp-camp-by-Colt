@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
-const Review = require('./review.js')
+const Review = require('./review.js');
+const { func } = require('joi');
 const Schema = mongoose.Schema;
 
 //to get an transformation on Image...
 //https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,h_200,w_200/r_max/f_auto/woman-blackdress-stairs.png
+
+const opts = { toJSON : { virtuals : true }}
 
 const ImageSchema = new Schema({
     url: String,
@@ -41,7 +44,14 @@ const campgroundSchema = new Schema({
             ref: "Review"
         }
     ]
-})
+}, opts)
+
+campgroundSchema.virtual('properties.popupMarkup').get(function() {
+    return `<strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
+        <p>${this.location}</p>`
+}) 
+
+
 
 campgroundSchema.post('findOneAndDelete', async function(doc) {
     if(doc) {
