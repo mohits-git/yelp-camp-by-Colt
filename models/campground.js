@@ -2,9 +2,21 @@ const mongoose = require('mongoose');
 const Review = require('./review.js')
 const Schema = mongoose.Schema;
 
+//to get an transformation on Image...
+//https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,h_200,w_200/r_max/f_auto/woman-blackdress-stairs.png
+
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+})
+
+ImageSchema.virtual('thumbnail').get(function() {
+    return this.url.replace('/upload', '/upload/w_200/');
+})
+
 const campgroundSchema = new Schema({
     title: String,
-    image: String,
+    images:[ImageSchema], 
     price: Number,
     description: String,
     location: String,
