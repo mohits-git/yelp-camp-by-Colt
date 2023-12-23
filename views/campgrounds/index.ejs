@@ -9,9 +9,9 @@ const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
             <div class="row">
                 <div class="col-md-4">
                 <% if(campground.images.length) { %>
-                    <img class="img-fluid" src="<%=campground.images[0].url%>" alt="">
+                    <img crossorigin="anonymous" class="img-fluid" src="<%=campground.images[0].url%>" alt="">
                 <% } else { %> 
-                    <img class="img-fluid" src="https://res.cloudinary.com/djdsjlgxy/image/upload/v1703227407/YelpCamp/g1p9oadb3lzmjly8f1wq.jpg" alt="">
+                    <img crossorigin="anonymous" class="img-fluid" src="https://res.cloudinary.com/djdsjlgxy/image/upload/v1703227407/YelpCamp/g1p9oadb3lzmjly8f1wq.jpg" alt="">
                 <% } %>
                 </div>
                 <div class="col-md-8">

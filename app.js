@@ -13,6 +13,9 @@ const flash = require('connect-flash')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const User = require('./models/user.js')
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const securityPolicy = require('./securityPolicy.js')
 
 const userRoutes = require('./routes/users.js')
 const campgroundRoutes = require('./routes/campgroud.js')
@@ -32,16 +35,23 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
+app.use(mongoSanitize())
+app.use(helmet())
+
+app.use(helmet.contentSecurityPolicy( securityPolicy ));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '/public')))
 
 const sessionConfig = {
+    name: 'sission',
     secret: "ThisIsASecretMessage",
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
+        //secure: true,   //for HTTPS 
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }

@@ -19,6 +19,9 @@ module.exports.createCampground = async (req, res, next) => {
         query: req.body.campground.location,
         limit: 1
     }).send()
+    if(!geoData.body.features.length){
+        return next(new Error("Please Enter a Valid Location"));
+    }
     const camp = new Campground(req.body.campground);
     camp.geometry = geoData.body.features[0].geometry
     camp.images = req.files.map(f => ({url: f.path, filename: f.filename}));
