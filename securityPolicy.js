@@ -7,6 +7,8 @@ const scriptSrcUrls = [
     "https://cdn.jsdelivr.net",
 ];
 const styleSrcUrls = [
+    "https://yelp-camp-o99n.onrender.com/stylesheets/stars.css",
+    "https://yelp-camp-o99n.onrender.com",
     "https://cdn.jsdelivr.net",
     "https://kit-free.fontawesome.com/",
     "https://stackpath.bootstrapcdn.com/",
