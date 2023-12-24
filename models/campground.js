@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Review = require('./review.js');
-const { func } = require('joi');
 const Schema = mongoose.Schema;
 
 //to get an transformation on Image...

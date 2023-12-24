@@ -16,12 +16,15 @@ const User = require('./models/user.js')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const securityPolicy = require('./securityPolicy.js')
+const MongoStore = require('connect-mongo')
 
 const userRoutes = require('./routes/users.js')
 const campgroundRoutes = require('./routes/campgroud.js')
 const reviewRoutes = require('./routes/review.js');
 
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
+const dbUrl = process.env.DB_URL;
+//const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp';
+mongoose.connect(dbUrl)
     .then(() => {
         console.log("Mongo Connected Successfuly");
     })
@@ -44,9 +47,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '/public')))
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: process.env.SECRET,
+    }
+});
+
 const sessionConfig = {
+    store,
     name: 'sission',
-    secret: "ThisIsASecretMessage",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -90,6 +102,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 })
 
-app.listen(3000, () => {
-    console.log("Serving at Port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Serving at Port ${port}`);
 })
